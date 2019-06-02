@@ -16,7 +16,7 @@
 <i>sudo apt-get install mongodb</i><br><br>
 
 <b>Step 6:</b> <i>Clone from  Git</i><br>
-<i>git clone https://github.com/RohitMetaCube/test_code.git</i>
+<i>git clone https://github.com/RohitMetaCube/supermarket_billing_system.git</i>
 <br><br>
 
 <b>Step 7:</b> <i>Move in SUPERMARKET_BILLING_HOME Dir</i><br>

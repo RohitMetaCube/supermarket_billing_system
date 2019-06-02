@@ -1,0 +1,183 @@
+<div id="formWarpper">
+  <form>
+    <div name='hidden_params'>
+    	<input type="hidden" name="source" value="HTML Form"/>
+    </div>
+    
+    Customer Name:
+    <input name="CustomerName" id="cname" value=""/>
+    
+    <div>
+      <table name="items">
+      	<tr><th>Item Name</th><th>Quantity</th><th>Unit</th></tr>
+      	<tr>
+      		<td>
+      			<input name="iName" value="Apple" id="apple_1" size=8 disabled>
+      		</td>
+      		<td>
+      			<input type="number" name="iQuantity" min="0"  id="apple_2">
+      		</td>
+      		<td>
+      			<select name="iUnit" id="apple_3">
+			         <option value="Kilograms">Kilograms</option>
+			         <option value="Grams">Grams</option>
+			    </select>			
+      		</td>
+      	</tr>
+      	<tr>
+      		<td>
+      			<input name="iName" value="Orange" id="orange_1" size=8 disabled>
+      		</td>
+      		<td>
+      			<input type="number" name="iQuantity" min="0"  id="orange_2">
+      		</td>
+      		<td>
+      			<select name="iUnit" id="orange_3">
+			         <option value="Kilograms">Kilograms</option>
+                           <option value="Grams">Grams</option>
+			    </select>			
+      		</td>
+      	</tr>
+      	<tr>
+      		<td>
+      			<input name="iName" value="Potato" id="potato_1" size=8 disabled>
+      		</td>
+      		<td>
+      			<input type="number" name="iQuantity" min="0"  id="potato_2">
+      		</td>
+      		<td>
+      			<select name="iUnit" id="potato_3">
+			         <option value="Kilograms">Kilograms</option>
+                           <option value="Grams">Grams</option>
+			    </select>			
+      		</td>
+      	</tr>
+      	<tr>
+      		<td>
+      			<input name="iName" value="Tomato" id="tomato_1" size=8 disabled>
+      		</td>
+      		<td>
+      			<input type="number" name="iQuantity" min="0"  id="tomato_2">
+      		</td>
+      		<td>
+      			<select name="iUnit" id="tomato_3">
+			         <option value="Kilograms">Kilograms</option>
+                           <option value="Grams">Grams</option>
+			    </select>			
+      		</td>
+      	</tr>
+      	<tr>
+      		<td>
+      			<input name="iName" value="Cow Milk" id="cow_milk_1" size=8 disabled>
+      		</td>
+      		<td>
+      			<input type="number" name="iQuantity" min="0"  id="cow_milk_2">
+      		</td>
+      		<td>
+      			<select name="iUnit" id="cow_milk_3">
+			         <option value="Liters">Liters</option>
+			         <option value="Mililiters">Mililiters</option>
+			    </select>			
+      		</td>
+      	</tr>
+      	<tr>
+      		<td>
+      			<input name="iName" value="Soy Milk" id="soy_milk_1" size=8 disabled>
+      		</td>
+      		<td>
+      			<input type="number" name="iQuantity" min="0"  id="soy_milk_2">
+      		</td>
+      		<td>
+      			<select name="iUnit" id="soy_milk_3">
+			         <option value="Liters">Liters</option>
+                           <option value="Mililiters">Mililiters</option>
+			    </select>			
+      		</td>
+      	</tr>
+      	<tr>
+      		<td>
+      			<input name="iName" value="Cheddar" id="cheddar_1" size=8 disabled>
+      		</td>
+      		<td>
+      			<input type="number" name="iQuantity" min="0"  id="cheddar_2">
+      		</td>
+      		<td>
+      			<select name="iUnit" id="cheddar_3">
+			         <option value="Kilograms">Kilograms</option>
+                           <option value="Grams">Grams</option>
+			    </select>			
+      		</td>
+      	</tr>
+      	<tr>
+      		<td>
+      			<input name="iName" value="Gouda" id="gouda_1" size=8 disabled>
+      		</td>
+      		<td>
+      			<input type="number" name="iQuantity" min="0"  id="gouda_2">
+      		</td>
+      		<td>
+      			<select name="iUnit" id="gouda_3">
+			         <option value="Kilograms">Kilograms</option>
+                           <option value="Grams">Grams</option>
+			    </select>			
+      		</td>
+      	</tr>
+      </table>
+    </div>
+        
+    <br><br>
+    
+    <input type="button" id='button'value="Generate Bill" onclick="requestDF()"/>
+
+    <!-- <div id="demo"></div> -->
+
+  </form>
+
+</div>
+
+<script>
+function requestDF(){
+	document.getElementById("button").disabled = true;
+	url="http://localhost:8080/customer/webhook";
+	
+	customer = document.getElementById('cname').value
+	items = [];
+	document.getElementsByName('iName').forEach(function(name){
+            items.push({'iName':name.value});
+      });
+      quantities = document.getElementsByName('iQuantity');
+      for (var i in Array.from({length: quantities.length}, (x,i) => i)){
+            if (quantities[i].value){
+                  items[i]['iQuantity'] = parseInt(quantities[i].value);      
+            } else {
+                  items[i]['iQuantity'] = 0
+            }
+      };
+      units = document.getElementsByName('iUnit');
+      for (var i in Array.from({length: units.length}, (x,i) => i)){
+            items[i]['iUnit'] = units[i].value;
+      };
+
+      l = items.length;
+      for( var i = l-1; i >= 0; i--){ 
+         if (items[i]['iQuantity'] === 0) {
+            items.splice(i, 1); 
+         }
+      };
+	
+	var xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange = function() {
+	  if (this.readyState == 4 && this.status == 200) {
+	    var obj = JSON.parse(this.responseText);
+       document.getElementById("formWarpper").innerHTML =  obj["fullfillment"];
+	  } else {
+         console.log(this.readyState, this.status);
+         console.log(this.responseText);
+     }
+	};
+	xhttp.open("POST", url, true);
+	xhttp.setRequestHeader("Content-type", "application/json");
+	// xhttp.setRequestHeader("Authorization", "Bearer 4134fa2795ce47b6acdbc003f73f83f2");
+	xhttp.send(JSON.stringify({"items":items, "name":customer}));
+}
+</script>

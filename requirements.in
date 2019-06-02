@@ -1,0 +1,2 @@
+cherrypy==4.0.0
+httplib2==0.11.3
